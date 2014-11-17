@@ -7,9 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera - Copy.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Cube - Copy.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Group.cpp" />
     <ClCompile Include="main.cpp" />
@@ -20,15 +18,12 @@
     <ClCompile Include="Vector3d.cpp" />
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="FrustumCulling.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera - Copy.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Const - Copy.h" />
     <ClInclude Include="Const.h" />
-    <ClInclude Include="Cube - Copy.h" />
     <ClInclude Include="Cube.h" />
-    <ClInclude Include="Debug - Copy.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Geode.h" />
     <ClInclude Include="Group.h" />
@@ -40,5 +35,11 @@
     <ClInclude Include="Vector3d.h" />
     <ClInclude Include="Vector4d.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="FrustumCulling.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="bear.obj" />
+    <Object Include="bunny.obj" />
+    <Object Include="dragon.obj" />
   </ItemGroup>
 </Project>

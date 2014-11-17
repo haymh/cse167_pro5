@@ -8,7 +8,6 @@
 #include "MatrixTransform.h"
 #include "Cube.h"
 #include "Sphere.h"
-#include "Robot.h"
 #include "FrustumCulling.h"
 
 class Window	  // OpenGL output window related routines
@@ -31,7 +30,6 @@ class Window	  // OpenGL output window related routines
 private :
 	static MatrixTransform* root; 
 	static FrustumCulling fc;
-	static Robot robot;
 
 };
 

@@ -27,7 +27,7 @@ void Parser::parse(char* file, vector<double> &position, vector<Vector3d> &norma
 		if (d > x_max)
 			x_max = d;
 		if (d < x_min)
-			x_min = d; 
+			x_min = d;
 		position.push_back(d);
 
 		iss >> d;
@@ -53,4 +53,60 @@ void Parser::parse(char* file, vector<double> &position, vector<Vector3d> &norma
 		normal.push_back(n);
 	}
 	std::cout << "x min: " << x_min << "x max: " << x_max << "y min: " << y_min << "y max: " << y_max << "z min: " << z_min << "z max: " << z_max << std::endl;
+}
+
+
+void Parser::parseObj(char* file, vector<Coordinate3d> &position, vector<Vector3d> &normal, vector<Coordinate3i> & posIndex, vector<Coordinate3i> & norIndex, Coordinate3d & min, Coordinate3d & max){
+	FILE* fp;
+	double x, y, z;
+	int c1, c2;
+
+	fp = fopen(file, "rb");
+	if (fp == NULL){
+		cerr << "error loading file" << endl;
+		exit(-1);
+	}
+
+	min.x = min.y = min.z = std::numeric_limits<double>::max();
+	max.x = max.y = max.z = std::numeric_limits<double>::min();
+	char line[256];
+	while (fgets(line, 80, fp) != NULL){
+		
+		if (line[0] == 'v' && line[1] == ' '){			// reading vertex and color   v 0.145852 0.104651 0.517576 0.2 0.8 0.4
+			Coordinate3d c;
+			sscanf(line, "%f %f %f\n", &(c.x), &(c.y), &(c.z));
+			if (c.x > max.x)
+				max.x = c.x;
+			if (c.x < min.x)
+				min.x = c.x;
+
+			if (c.y > max.y)
+				max.y = c.y;
+			if (c.y < min.y)
+				min.y = c.y;
+
+			if (c.z > max.z)
+				max.z = c.z;
+			if (c.z < min.z)
+				min.z = c.z;
+			position.push_back(c);
+		}
+		else if (line[0] == 'v' && line[1] == 'n'){      // reading vertex normal   vn -0.380694 3.839313 4.956321
+			sscanf(line, "%f %f %f\n", &x, &y, &z);
+			Vector3d n(x, y, z);
+			n.normalize();
+			normal.push_back(n);
+		}
+		else if (line[0] == 'f' && line[1] == ' '){		// reading faces  f 31514//31514 31465//31465 31464//31464
+			Coordinate3i pos;
+			Coordinate3i nor;
+			sscanf(line, "%d//%d %d//%d %d//%d\n", &(pos.x), &(pos.y), &(pos.z), &(nor.x), &(nor.y), &(nor.z));
+			posIndex.push_back(pos);
+			norIndex.push_back(nor);
+		}
+		else
+			continue;
+	}
+
+	fclose(fp);
 }

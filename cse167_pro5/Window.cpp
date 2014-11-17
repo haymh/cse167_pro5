@@ -16,7 +16,6 @@ int Window::old_x = width / 2;
 int Window::old_y = height / 2;
 
 MatrixTransform* Window::root = new MatrixTransform(Matrix4d());
-Robot Window::robot(1.5,1.5,1,2,2,1, 2.5);
 
 Vector3d eye(0, 10, 40);
 Vector3d lookat(0, 0, 0);
@@ -26,19 +25,8 @@ bool wire = false;
 
 
 void Window::init(){
-	Matrix4d t;
-	t.makeTranslate(0, -0.5, 0);
-	MatrixTransform* floor = new MatrixTransform(t);
-	root->addChild(robot.getRoot());
-	//root->addChild(floor);
-	for (int i = -15; i < 15; i++){
-		for (int j = -15; j < 15; j++){
-			t.makeTranslate(i, 0, j);
-			MatrixTransform* tile = new MatrixTransform(t);
-			floor->addChild(tile);
-			tile->addChild(new Cube(0.7, Vector3d(0.5, 0.3, 0.6), draw::WIRE));
-		}
-	}
+
+
 }
 
 //----------------------------------------------------------------------------
@@ -93,22 +81,7 @@ MatrixTransform* Window::getRoot(){
 }
 
 void Window::keyboardProcess(unsigned char key, int x, int y){
-	switch (key){
-	case 'r':
-		robot.rotate(5);
-		break;
-	case 't':
-		robot.rotate(-5);
-		break;
-	case 'w':
-		robot.walk();
-		break;
-	case 'b':
-		wire = !wire;
-		break;
-	case 27:
-		exit(0);
-	}
+
 }
 void Window::processSpecialKeys(int k, int x, int y){
 

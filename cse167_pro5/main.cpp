@@ -4,11 +4,31 @@
 #include "Sphere.h"
 #include "GL\glut.h"
 #include "Matrix4d.h"
-#include "Arm.h"
-#include "Leg.h"
-#include "Robot.h"
+#include "parser.h"
+#include <iostream>
+
+using namespace std;
 
 int main(int argc, char** argv) {
+
+	vector<Coordinate3d> position;
+	vector<Vector3d> normal;
+	vector<Coordinate3i> posIndex;
+	vector<Coordinate3i> norIndex;
+	Coordinate3d min;
+	Coordinate3d max;
+
+	Parser::parseObj("dragon.obj", position, normal, posIndex, norIndex, min, max);
+
+	cout << "# of vertice : " << position.size() << endl;
+	cout << "# of normal : " << normal.size() << endl;
+	cout << "# of indices of position : " << posIndex.size() << endl;
+	cout << "# of indices of normal : " << norIndex.size() << endl;
+	cout << "min:  ( " << min.x << ", " << min.y << ", " << min.z << " )" << endl;
+	cout << "max:  ( " << max.x << ", " << max.y << ", " << max.z << " )" << endl;
+
+	system("pause");
+	/*
 	float specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	float shininess[] = { 100.0 };
 	float position[] = { 0.0, 10.0, 1.0, 0.0 };	// lightsource position
@@ -47,13 +67,7 @@ int main(int argc, char** argv) {
 	//a.rotateLower(-15);
 	//Robot a;
 	//Window::addNode(Window::getRoot(), a.getRoot());
-	/*
-	Matrix4d m;
-	//m.makeTranslate(5, 0, 0);
-	MatrixTransform * mt = new MatrixTransform(m);
-	Window::addNode(Window::getRoot(), mt);
-	mt->addChild(new Cube(5, Vector3d(1.0, 0, 0), draw::SOLID));
-	*/
+	
 	Window::init();
 	glutReshapeFunc(Window::reshapeCallback);
 	glutDisplayFunc(Window::displayCallback);
@@ -64,4 +78,5 @@ int main(int argc, char** argv) {
 	//glutPassiveMotionFunc(Window::mousePassiveMotionProcess);
 	glutSpecialFunc(Window::processSpecialKeys);
 	glutMainLoop();
+	*/
 }
