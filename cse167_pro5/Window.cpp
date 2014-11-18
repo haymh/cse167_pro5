@@ -1,11 +1,13 @@
 #include <iostream>
 #include "Window.h"
-#include "Cube.h"
 #include "Matrix4d.h"
 #include "GL\glew.h"
 #include "GL\glut.h"
 #include "Debug.h"
+#include "Const.h"
 
+#define ROTSCALE 80.0;
+#define ZOOMSCALE 2.0;
 
 using namespace std;
 
@@ -29,6 +31,12 @@ vector<Coordinate3d> bunny_pos;
 vector<Vector3d> bunny_nor;
 vector<Coordinate3i> bunny_pos_ind;
 vector<Coordinate3i> bunny_nor_ind;
+
+//trackball variables
+control::MOVEMENT movement = control::NONE;
+Vector3d lastPoint;
+Matrix4d rotation;
+Matrix4d scaling;
 
 void Window::init(){
 	Parser::parseObj("bunny.obj", bunny_pos, bunny_nor, bunny_pos_ind, bunny_nor_ind, bunny_min, bunny_max);
@@ -97,8 +105,8 @@ void Window::displayCallback()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
 
 	glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
-	//glLoadMatrixd((bunny_scale * bunny_tran).getPointer());
-	glLoadIdentity();
+	Matrix4d m = rotation * bunny_scale * scaling * bunny_tran;
+	glLoadMatrixd(m.getPointer());
 	drawBunny();
 	glFlush();
 	glutSwapBuffers(); 
@@ -111,47 +119,88 @@ void Window::keyboardProcess(unsigned char key, int x, int y){
 void Window::processSpecialKeys(int k, int x, int y){
 
 }
-void Window::mouseMotionProcess(int, int){
-
+void Window::mouseMotionProcess(int x, int y){
+	Vector3d direction;
+	double pixel_diff;
+	double rot_angle, zoom_factor;
+	Vector3d curPoint;
+	curPoint = trackBallMapping(x, y);
+	switch (movement){
+	case control::ROTATION:
+	{
+		curPoint = trackBallMapping(x, y);
+		direction = curPoint - lastPoint;
+		double velocity = direction.magnitude();
+		if (velocity > 0.0001){
+			Vector3d rotAxis = lastPoint * curPoint;
+			rot_angle = velocity * ROTSCALE;
+			Matrix4d r;
+			r.makeRotate(rot_angle, rotAxis);
+			//r.makeRotateY(rot_angle);
+			rotation = r * rotation;
+		}
+	}
+	break;
+	case control::SCALING:
+	{
+		pixel_diff = curPoint[1] - lastPoint[1];
+		zoom_factor = 1.0 + pixel_diff * ZOOMSCALE;
+		Matrix4d s;
+		s.makeScale(zoom_factor, zoom_factor, zoom_factor);
+		scaling = scaling * s;
+		displayCallback();
+	}
+		break;
+	}
+	lastPoint = curPoint;
 }
-void Window::mouseProcess(int, int, int, int){
 
+
+void Window::mouseProcess(int button, int state, int x, int y){
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
+		movement = control::ROTATION;
+		old_x = x;
+		old_y = y;
+		lastPoint = trackBallMapping(x, y);
+	}
+	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN){
+		movement = control::SCALING;
+		old_x = x;
+		old_y = y;
+		lastPoint = trackBallMapping(x, y);
+	}
+	else
+		movement = control::NONE;
 }
 
 void Window::drawBunny(){
-	//glBegin(GL_QUADS);
-	//glColor3d(1.0, 1.0, 1.0);
-	//glVertex3d(1.0, 1.0, 1.0);
-	//glVertex3d(-1.0, -1.0, -1.0);
-	//glVertex3d(-1.0, 1.0, -1.0);
-	//glVertex3d(-1.0, -1.0, 1.0);
-	/*
+	glBegin(GL_TRIANGLES);
+	
 	for (int i = 0; i < bunny_pos_ind.size(); i++){
-		
 		Vector3d nor = bunny_nor[bunny_nor_ind[i].x - 1];
 		glNormal3d(nor[0], nor[1], nor[2]);
 		Coordinate3d pos = bunny_pos[bunny_pos_ind[i].x - 1];
 		glVertex3d(pos.x, pos.y, pos.z);
 
-		//nor = bunny_nor[bunny_nor_ind[i].y - 1];
-		//glNormal3d(nor[0], nor[1], nor[2]);
+		nor = bunny_nor[bunny_nor_ind[i].y - 1];
+		glNormal3d(nor[0], nor[1], nor[2]);
 		pos = bunny_pos[bunny_pos_ind[i].y - 1];
 		glVertex3d(pos.x, pos.y, pos.z);
 		
-		//nor = bunny_nor[bunny_nor_ind[i].z - 1];
-		//glNormal3d(nor[0], nor[1], nor[2]);
+		nor = bunny_nor[bunny_nor_ind[i].z - 1];
+		glNormal3d(nor[0], nor[1], nor[2]);
 		pos = bunny_pos[bunny_pos_ind[i].z - 1];
 		glVertex3d(pos.x, pos.y, pos.z);
-		
-		//cout << "pos indices: " << bunny_pos_ind[i].x << " , " << bunny_pos_ind[i].y << " , " << bunny_pos_ind[i].z << endl;
-		//cout << "nor indices: " << bunny_nor_ind[i].x << " , " << bunny_nor_ind[i].y << " , " << bunny_nor_ind[i].z << endl;
-	}
-	*/
-	
-	for (int i = 0; i < bunny_pos.size(); i++){
-		cout << "pos : " << bunny_pos[i].x << " , " << bunny_pos[i].y << " , " << bunny_pos[i].z << endl;
-		cout << "nor : " << bunny_nor[i][0] << " , " << bunny_nor[i][1] << " , " << bunny_nor[i][2] << endl;
 	}
 	
-	//glEnd();
+	glEnd();
+}
+
+Vector3d Window::trackBallMapping(int x, int y){
+	Vector3d v(double (2*x - width) / double (width), double (height - 2*y) / double (height), 0);
+	double d = v.magnitude();
+	d = d < 1.0 ? d : 1.0;
+	v.set(2, sqrt(1.001 - d*d));
+	v.normalize();
+	return v;
 }

@@ -32,6 +32,7 @@ private :
 
 	static Matrix4d calculateScalingMatrix(int w, int h, Coordinate3d min, Coordinate3d max);
 	static void drawBunny();
+	static Vector3d trackBallMapping(int x, int y);
 
 };
 

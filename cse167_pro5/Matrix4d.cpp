@@ -132,6 +132,7 @@ void Matrix4d::makeRotate(double angle, Vector3d & axis){
 	double xy = x * y;
 	double xz = x * z;
 	double yz = y * z;
+	/*
 	m[0][0] = 1 + c * (xx - 1);
 	m[0][1] = z * s + c * xy;
 	m[0][2] = -y * s + c * xz;
@@ -140,6 +141,16 @@ void Matrix4d::makeRotate(double angle, Vector3d & axis){
 	m[1][2] = x * s + c * yz;
 	m[2][0] = y * s + c * xz;
 	m[2][1] = -x * s + c * yz;
+	m[2][2] = 1 + c * (zz - 1);
+	*/
+	m[0][0] = 1 + c * (xx - 1);
+	m[1][0] = z * s + c * xy;
+	m[2][0] = -y * s + c * xz;
+	m[0][1] = -z * s + c * xy;
+	m[1][1] = 1 + c * (yy - 1);
+	m[2][1] = x * s + c * yz;
+	m[0][2] = y * s + c * xz;
+	m[1][2] = -x * s + c * yz;
 	m[2][2] = 1 + c * (zz - 1);
 }
 
