@@ -10,7 +10,7 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-
+	/*
 	vector<Coordinate3d> position;
 	vector<Vector3d> normal;
 	vector<Coordinate3i> posIndex;
@@ -28,7 +28,8 @@ int main(int argc, char** argv) {
 	cout << "max:  ( " << max.x << ", " << max.y << ", " << max.z << " )" << endl;
 
 	system("pause");
-	/*
+	*/
+	///*
 	float specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	float shininess[] = { 100.0 };
 	float position[] = { 0.0, 10.0, 1.0, 0.0 };	// lightsource position
@@ -37,7 +38,7 @@ int main(int argc, char** argv) {
 
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
 	glutInitWindowSize(Window::width, Window::height);
-	glutCreateWindow("scene graph");
+	glutCreateWindow("project 5");
 
 	glEnable(GL_DEPTH_TEST);            	      // enable depth buffering
 	glClear(GL_DEPTH_BUFFER_BIT);       	      // clear depth buffer
@@ -78,5 +79,5 @@ int main(int argc, char** argv) {
 	//glutPassiveMotionFunc(Window::mousePassiveMotionProcess);
 	glutSpecialFunc(Window::processSpecialKeys);
 	glutMainLoop();
-	*/
+	//*/
 }

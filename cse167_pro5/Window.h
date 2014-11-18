@@ -9,6 +9,7 @@
 #include "Cube.h"
 #include "Sphere.h"
 #include "FrustumCulling.h"
+#include "parser.h"
 
 class Window	  // OpenGL output window related routines
 {
@@ -24,12 +25,13 @@ class Window	  // OpenGL output window related routines
 	static void processSpecialKeys(int k, int x, int y);
 	static void mouseMotionProcess(int, int);
 	static void mouseProcess(int, int, int, int);
-	static void addNode(Group * parent, Node * child);
-	static MatrixTransform* getRoot();
 
 private :
 	static MatrixTransform* root; 
 	static FrustumCulling fc;
+
+	static Matrix4d calculateScalingMatrix(int w, int h, Coordinate3d min, Coordinate3d max);
+	static void drawBunny();
 
 };
 

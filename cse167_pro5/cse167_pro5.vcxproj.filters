@@ -37,9 +37,4 @@
     <ClInclude Include="Window.h" />
     <ClInclude Include="FrustumCulling.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Object Include="bear.obj" />
-    <Object Include="bunny.obj" />
-    <Object Include="dragon.obj" />
-  </ItemGroup>
 </Project>

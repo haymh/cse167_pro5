@@ -107,11 +107,6 @@
     <ClInclude Include="Vector4d.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Object Include="bear.obj" />
-    <Object Include="bunny.obj" />
-    <Object Include="dragon.obj" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
