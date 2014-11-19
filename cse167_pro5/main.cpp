@@ -47,7 +47,11 @@ int main(int argc, char** argv) {
 	glDisable(GL_CULL_FACE);     // disable backface culling to render both sides of polygons
 	glShadeModel(GL_SMOOTH);             	      // set shading to smooth
 	glMatrixMode(GL_PROJECTION);
-
+	glEnable(GL_LIGHTING);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_NORMALIZE);
+	glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+	/*
 	// Generate material properties:
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
@@ -56,9 +60,9 @@ int main(int argc, char** argv) {
 
 	// Generate light source:
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
-	glEnable(GL_LIGHTING);
+	
 	glEnable(GL_LIGHT0);
-
+	*/
 	//Arm a(2.5, 5, 1, Vector3d(1.0, 0, 0), Vector3d(0, 1.0, 0), Vector3d(0, 0, 1.0));
 	
 	//a.rotateWhole(-45);

@@ -1,4 +1,6 @@
 #include "Light.h"
+#include "GL/glew.h"
+#include <iostream>
 
 int Light::lightCount = -1;
 
@@ -27,7 +29,12 @@ Light::Light(){
 	spot_direction.f[0] = 0.0;
 	spot_direction.f[1] = 0.0;
 	spot_direction.f[2] = -1.0;
+	c_attenuation = 1.0;
+	l_attenuation = 0.0;
+	q_attenuation = 0.0;
 	spot = false;
+	lightCount++;
+	id = lightCount;
 }
 
 Light::Light(f4 am, f4 di, f4 sp, f4 po){
@@ -39,7 +46,12 @@ Light::Light(f4 am, f4 di, f4 sp, f4 po){
 	spot_direction.f[0] = 0.0;
 	spot_direction.f[1] = 0.0;
 	spot_direction.f[2] = -1.0;
+	c_attenuation = 1.0;
+	l_attenuation = 0.0;
+	q_attenuation = 0.0;
 	spot = false;
+	lightCount++;
+	id = lightCount;
 }
 
 void Light::setAmbient(f4 am){
@@ -67,9 +79,29 @@ void Light::setCutOff(float cf){
 }
 
 void Light::setAttenuation(float c, float l, float q){
-	glLightfv()
+	c_attenuation = c;
+	l_attenuation = l;
+	q_attenuation = q;
 }
 
 void Light::isSpotLight(bool b){
 	spot = b;
+}
+
+void Light::apply(){
+	
+	glLightfv(GL_LIGHT0 + id, GL_AMBIENT, ambient.f);
+	glLightfv(GL_LIGHT0 + id, GL_DIFFUSE, diffuse.f);
+	glLightfv(GL_LIGHT0 + id, GL_SPECULAR, specular.f);
+	glLightfv(GL_LIGHT0 + id, GL_POSITION, position.f);
+	glLightf(GL_LIGHT0 + id, GL_CONSTANT_ATTENUATION, c_attenuation);
+	glLightf(GL_LIGHT0 + id, GL_LINEAR_ATTENUATION, l_attenuation);
+	glLightf(GL_LIGHT0 + id, GL_QUADRATIC_ATTENUATION, q_attenuation);	
+	if (spot){
+		glLightf(GL_LIGHT0 + id, GL_SPOT_EXPONENT, exponent);
+		glLightf(GL_LIGHT0 + id, GL_SPOT_CUTOFF, cut_off);
+		glLightfv(GL_LIGHT0 + id, GL_SPOT_DIRECTION, spot_direction.f);
+	}
+	glEnable(GL_LIGHT0 + id);
+	std::cout << "light count: " << id << std::endl;
 }

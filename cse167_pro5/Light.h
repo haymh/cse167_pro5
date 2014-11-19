@@ -28,6 +28,7 @@ private:
 	static int lightCount;
 	bool amGiven, diGiven, spGiven, poGiven;
 	bool spot;
+	int id;
 };
 
 #endif
