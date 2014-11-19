@@ -6,7 +6,7 @@
 #include "Debug.h"
 #include "Const.h"
 
-#define ROTSCALE 80.0;
+#define ROTSCALE 180.0;
 #define ZOOMSCALE 2.0;
 
 using namespace std;
@@ -44,7 +44,7 @@ void Window::init(){
 		-(bunny_min.y + bunny_max.y) / 2, -(bunny_min.z + bunny_max.z) / 2);
 	cout << "min: " << bunny_min.x << " , " << bunny_min.y << " , " << bunny_min.z << endl;
 	cout << "max: " << bunny_max.x << " , " << bunny_max.y << " , " << bunny_max.z << endl;
-	system("pause");
+	//system("pause");
 	bunny_scale = calculateScalingMatrix(width, height, bunny_min, bunny_max);
 	bunny_tran.print("bunny translate: ");
 	bunny_scale.print("bunny scaling: ");
@@ -128,7 +128,7 @@ void Window::mouseMotionProcess(int x, int y){
 	switch (movement){
 	case control::ROTATION:
 	{
-		curPoint = trackBallMapping(x, y);
+		//curPoint = trackBallMapping(x, y);
 		direction = curPoint - lastPoint;
 		double velocity = direction.magnitude();
 		if (velocity > 0.0001){
@@ -136,6 +136,7 @@ void Window::mouseMotionProcess(int x, int y){
 			rot_angle = velocity * ROTSCALE;
 			Matrix4d r;
 			r.makeRotate(rot_angle, rotAxis);
+			r.print("rotation: ");
 			//r.makeRotateY(rot_angle);
 			rotation = r * rotation;
 		}

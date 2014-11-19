@@ -19,6 +19,8 @@
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="FrustumCulling.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Light.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -36,5 +38,7 @@
     <ClInclude Include="Vector4d.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="FrustumCulling.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Light.h" />
   </ItemGroup>
 </Project>

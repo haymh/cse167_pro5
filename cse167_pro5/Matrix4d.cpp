@@ -122,7 +122,8 @@ void Matrix4d::makeRotate(double angle, Vector3d & axis){
 	angle = angle / 180.0 * M_PI;
 	identity();
 	double s = sin(angle);
-	double c = 1 - cos(angle);
+	double c = cos(angle);
+	double t = 1 - c;
 	double x = axis[0];
 	double y = axis[1];
 	double z = axis[2];
@@ -133,6 +134,43 @@ void Matrix4d::makeRotate(double angle, Vector3d & axis){
 	double xz = x * z;
 	double yz = y * z;
 	/*
+	m[0][0] = 1 + t*(xx - 1);
+	m[0][1] = t*xy + s*z;
+	m[0][2] = t*xz - s*y;
+	m[1][0] = t*xy - s*z;
+	m[1][1] = 1 + t *(yy-1);
+	m[1][2] = t*yz + s*x;
+	m[2][0] = t*xz + s*y;
+	m[2][1] = t*yz - s*x;
+	m[2][2] = 1 + t*(zz - 1);
+	*/
+	m[0][0] = t * xx + c;
+	m[0][1] = t*xy + s*z;
+	m[0][2] = t*xz - s*y;
+
+	m[1][0] = t*xy - s*z;
+	m[1][1] = t*yy + c;
+	m[1][2] = t*yz + s*x;
+
+	m[2][0] = t*xz + s*y;
+	m[2][1] = t*yz - s*x;
+	m[2][2] = t*zz + c;
+	/*
+
+	angle = angle / 180.0 * M_PI;
+	identity();
+	double s = sin(angle);
+	double c = 1 - cos(angle);
+	double x = axis[0];
+	double y = axis[1];
+	double z = axis[2];
+	double xx = x * x;
+	double yy = y * y;
+	double zz = z * z;
+	double xy = x * y;
+	double xz = x * z;
+	double yz = y * z;
+	
 	m[0][0] = 1 + c * (xx - 1);
 	m[0][1] = z * s + c * xy;
 	m[0][2] = -y * s + c * xz;
@@ -142,7 +180,7 @@ void Matrix4d::makeRotate(double angle, Vector3d & axis){
 	m[2][0] = y * s + c * xz;
 	m[2][1] = -x * s + c * yz;
 	m[2][2] = 1 + c * (zz - 1);
-	*/
+	
 	m[0][0] = 1 + c * (xx - 1);
 	m[1][0] = z * s + c * xy;
 	m[2][0] = -y * s + c * xz;
@@ -152,6 +190,7 @@ void Matrix4d::makeRotate(double angle, Vector3d & axis){
 	m[0][2] = y * s + c * xz;
 	m[1][2] = -x * s + c * yz;
 	m[2][2] = 1 + c * (zz - 1);
+	*/
 }
 
 void Matrix4d::makeScale(double sx, double sy, double sz){
