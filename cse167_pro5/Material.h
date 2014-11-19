@@ -1,7 +1,6 @@
 #ifndef _MATERIAL_H_
 #define _MATERIAL_H_
 
-#include "Vector4d.h"
 #include "Const.h"
 
 using namespace control;
