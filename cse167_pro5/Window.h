@@ -28,10 +28,16 @@ class Window	  // OpenGL output window related routines
 
 private :
 	static MatrixTransform* root; 
+	static MatrixTransform* bunny;
+	static MatrixTransform* dragon;
+	static MatrixTransform* bear;
+	static MatrixTransform* spotL;
+	static MatrixTransform* pointL;
+	static MatrixTransform* scaling_mt;
+	static MatrixTransform* rotate_mt;
 	static FrustumCulling fc;
 
 	static Matrix4d calculateScalingMatrix(int w, int h, Coordinate3d min, Coordinate3d max);
-	static void drawBunny();
 	static Vector3d trackBallMapping(int x, int y);
 
 };

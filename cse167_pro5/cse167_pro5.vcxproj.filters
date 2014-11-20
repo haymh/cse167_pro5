@@ -21,6 +21,8 @@
     <ClCompile Include="FrustumCulling.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Cone.cpp" />
+    <ClCompile Include="ObjNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -40,5 +42,7 @@
     <ClInclude Include="FrustumCulling.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Cone.h" />
+    <ClInclude Include="ObjNode.h" />
   </ItemGroup>
 </Project>

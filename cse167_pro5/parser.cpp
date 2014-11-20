@@ -69,14 +69,13 @@ void Parser::parseObj(char* file, vector<Coordinate3d> &position, vector<Vector3
 	min.x = min.y = min.z = std::numeric_limits<double>::max();
 	max.x = max.y = max.z = std::numeric_limits<double>::min();
 	char c1, c2;
-	while (true){
-		c1 = fgetc(fp);
-		c2 = fgetc(fp);
-		if (c1 == EOF)
-			break;
+	char line[128];
+	while (fgets(line, 128, fp)){
+		c1 = line[0];
+		c2 = line[1];
 		if (c1 == 'v' && c2 == ' '){			// reading vertex and color   v 0.145852 0.104651 0.517576 0.2 0.8 0.4
 			Coordinate3d c;
-			fscanf(fp, "%lf %lf %lf", &(c.x), &(c.y), &(c.z));
+			sscanf(line, "v %lf %lf %lf\n", &(c.x), &(c.y), &(c.z));
 			//cout << "vertex x : " << c.x << " y : " << c.y << " z: " << c.z << endl;
 			if (c.x > max.x)
 				max.x = c.x;
@@ -96,7 +95,7 @@ void Parser::parseObj(char* file, vector<Coordinate3d> &position, vector<Vector3
 			position.push_back(c);
 		}
 		else if (c1 == 'v' && c2 == 'n'){      // reading vertex normal   vn -0.380694 3.839313 4.956321
-			fscanf(fp, "%lf %lf %lf", &x, &y, &z);
+			sscanf(line, "vn%lf %lf %lf\n", &x, &y, &z);
 			//cout << " normal x : " << x << " y : " << y << " z: " << z << endl;
 			Vector3d n(x, y, z);
 			n.normalize();
@@ -105,7 +104,7 @@ void Parser::parseObj(char* file, vector<Coordinate3d> &position, vector<Vector3
 		else if (c1 == 'f' && c2 == ' '){		// reading faces  f 31514//31514 31465//31465 31464//31464
 			Coordinate3i pos;
 			Coordinate3i nor;
-			fscanf(fp, "%d//%d %d//%d %d//%d", &(pos.x), &(nor.x), &(pos.y), &(nor.y), &(pos.z), &(nor.z));
+			sscanf(line, "f %d//%d %d//%d %d//%d\n", &(pos.x), &(nor.x), &(pos.y), &(nor.y), &(pos.z), &(nor.z));
 			//cout << "pos.x " << pos.x << " pos.y " << pos.y << " pos.z " << pos.z << endl;
 			//cout << "nor.x " << nor.x << " nor.y " << nor.y << " nor.z " << nor.z << endl;
 			posIndex.push_back(pos);

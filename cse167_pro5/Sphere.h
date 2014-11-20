@@ -4,10 +4,11 @@
 #include "Geode.h"
 #include "Const.h"
 #include "Vector3d.h"
+#include "Material.h"
 
 class Sphere : public Geode{
 public:
-	Sphere(double r, int slices, int stacks, Vector3d color, draw::mode);
+	Sphere(double r, int slices, int stacks, Vector3d color, draw::mode m, Material *ma = NULL);
 	Bs update();
 private:
 	void render();
@@ -16,6 +17,7 @@ private:
 	int stacks;
 	Vector3d color; 
 	draw::mode mode;
+	Material *material;
 };
 
 #endif
