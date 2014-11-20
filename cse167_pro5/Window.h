@@ -1,6 +1,7 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
+
 #include "Vector4d.h"
 #include "Camera.h"
 #include "Group.h"
@@ -10,6 +11,7 @@
 #include "Sphere.h"
 #include "FrustumCulling.h"
 #include "parser.h"
+
 
 class Window	  // OpenGL output window related routines
 {

@@ -19,7 +19,6 @@ private :
 	std::vector<Vector3d> * nor;
 	std::vector<Coordinate3i> * pos_ind;
 	std::vector<Coordinate3i> * nor_ind;
-	Vector3d color;
 	Material * material;
 };
 

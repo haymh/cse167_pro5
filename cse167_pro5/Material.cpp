@@ -1,6 +1,6 @@
 #include "Material.h"
-#include "GL\glew.h"
-
+#include <stdlib.h>
+#include "GL\glut.h"
 Material::Material(){
 	amGiven = diGiven = spGiven = shGiven = emGiven = coGiven = false;
 }

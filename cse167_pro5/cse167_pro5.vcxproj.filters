@@ -5,6 +5,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{76501dc6-d66c-4bcd-95fe-2c70a82a1c82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -23,6 +26,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Cone.cpp" />
     <ClCompile Include="ObjNode.cpp" />
+    <ClCompile Include="shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -44,5 +48,14 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Cone.h" />
     <ClInclude Include="ObjNode.h" />
+    <ClInclude Include="shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\diffuse_shading.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\diffuse_shading.vert">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

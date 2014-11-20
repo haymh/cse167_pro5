@@ -1,8 +1,8 @@
+#include <stdlib.h>
 #include "Window.h"
 #include "Cube.h"
 #include "MatrixTransform.h"
 #include "Sphere.h"
-#include "GL\glut.h"
 #include "Matrix4d.h"
 #include "parser.h"
 #include <iostream>

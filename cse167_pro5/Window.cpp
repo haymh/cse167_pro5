@@ -1,13 +1,18 @@
-#include <iostream>
+#include <stdlib.h>
+#include "shader.h"
 #include "Window.h"
+#include <iostream>
 #include "Matrix4d.h"
-#include "GL\glew.h"
-#include "GL\glut.h"
+
 #include "Debug.h"
 #include "Const.h"
 #include "Light.h"
 #include "Material.h"
 #include "ObjNode.h"
+#include "Cone.h"
+
+
+
 
 #define ROTSCALE 180.0;
 #define ZOOMSCALE 2.0;
@@ -55,15 +60,15 @@ f4 p_ambient(0.2, 0.2, 0.2, 1.0);
 f4 diffuse(1.0, 1.0, 1.0, 1.0);
 f4 p_diffuse(0.2, 0.2, 0.2, 1.0);
 f4 specular(1.0, 1.0, 1.0, 1.0);
-f4 position(3.0, 11.0, 0.0, 1.0);
-f4 position2(-3.0, 11.0, 0.0, 1.0);
-f3 spot_direction(-3.0, -11.0, 0.0);
+f4 position(3.0, 10.0, 0.0, 1.0);
+f4 position2(-3.0, 10.0, 0.0, 0.0);
+f3 spot_direction(-3.0, -10.0, 0.0);
 Light spotLight(ambient, diffuse, specular, position);
 
 Light pointLight(p_ambient, p_diffuse, specular, position2);
 
 // material parameters
-f4 m_ambient(0.5, 0.5, 0.5, 1.0);
+f4 m_ambient(0.5, 1.0, 0.5, 1.0);
 f4 m_diffuse(1.0, 1.0, 1.0, 1.0);
 f4 m_specular(1.0, 1.0, 1.0, 1.0);
 f4 m_emission(0.8, 0.8, 0.8, 0.0);
@@ -112,10 +117,22 @@ void Window::init(){
 	bunny->addChild(new ObjNode(&bunny_pos, &bunny_nor, &bunny_pos_ind, &bunny_nor_ind, bunny_min, bunny_max, &material));
 
 	Matrix4d t1;
-	t1.makeTranslate(-3.0, 11.0, 0.0);
+	t1.makeTranslate(-3.0, 10.0, 0.0);
 	pointL = new MatrixTransform(t1);
 	root->addChild(pointL);
 	pointL->addChild(new Sphere(1, 20, 20, Vector3d(1, 1, 1), draw::SOLID, &emissive_ma));
+
+	Vector3d vCone(-3, -10, 0);
+	vCone.normalize();
+	Vector3d axis = Vector3d(0, 0, -1) * vCone;
+	axis.normalize();
+	Matrix4d rCone;
+	rCone.makeRotate(acos(vCone.dot(Vector3d(0, 0, -1))) * 180 / M_PI, axis);
+	Matrix4d t2;
+	t2.makeTranslate(3, 10, 0);
+	spotL = new MatrixTransform(t2 * rCone);
+	root->addChild(spotL);
+	spotL->addChild(new Cone(1, 2, 20, 20, Vector3d(0.0, 0.0, 0.0),draw::SOLID));
 }
 
 Matrix4d Window::calculateScalingMatrix(int w, int h, Coordinate3d min, Coordinate3d max){
@@ -173,6 +190,9 @@ void Window::displayCallback()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	spotLight.apply();
+	pointLight.apply();
+	glMatrixMode(GL_MODELVIEW);
 	root->draw(Matrix4d());
 	glFlush();
 	glutSwapBuffers(); 

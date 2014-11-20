@@ -28,7 +28,7 @@ void ObjNode::render(){
 	glBegin(GL_TRIANGLES);
 
 
-	for (int i = 0; i < pos_ind -> size(); i++){
+	for (int i = 0; i < pos_ind->size(); i++){
 		Vector3d normal = (*nor)[(*nor_ind)[i].x - 1];
 		glNormal3d(normal[0], normal[1], normal[2]);
 		Coordinate3d position = (*pos)[(*pos_ind)[i].x - 1];
@@ -44,6 +44,7 @@ void ObjNode::render(){
 		position = (*pos)[(*pos_ind)[i].z - 1];
 		glVertex3d(position.x, position.y, position.z);
 	}
+	
 
 	glEnd();
 }

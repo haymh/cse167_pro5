@@ -1,7 +1,7 @@
 #ifndef _VECTOR4_H_
 #define _VECTOR4_H_
 
-#include "GL/glew.h"
+#include "GL/glut.h"
 #include "Vector3d.h"
 
 class Vector4d

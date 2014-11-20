@@ -18,6 +18,7 @@ public:
 				glMatrixMode(GL_MODELVIEW);
 				glLoadMatrixd(m.getPointer());
 				render();
+				glPopMatrix();
 				break;
 		}
 	};

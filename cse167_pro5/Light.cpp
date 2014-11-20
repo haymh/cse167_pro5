@@ -1,5 +1,7 @@
 #include "Light.h"
-#include "GL/glew.h"
+#include <stdlib.h>
+#include "GL\glut.h"
+
 #include <iostream>
 
 int Light::lightCount = -1;
@@ -103,5 +105,4 @@ void Light::apply(){
 		glLightfv(GL_LIGHT0 + id, GL_SPOT_DIRECTION, spot_direction.f);
 	}
 	glEnable(GL_LIGHT0 + id);
-	std::cout << "light count: " << id << std::endl;
 }

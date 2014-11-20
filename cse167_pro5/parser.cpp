@@ -93,6 +93,7 @@ void Parser::parseObj(char* file, vector<Coordinate3d> &position, vector<Vector3
 				min.z = c.z;
 				
 			position.push_back(c);
+			
 		}
 		else if (c1 == 'v' && c2 == 'n'){      // reading vertex normal   vn -0.380694 3.839313 4.956321
 			sscanf(line, "vn%lf %lf %lf\n", &x, &y, &z);

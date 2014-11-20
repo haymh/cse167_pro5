@@ -1,4 +1,6 @@
+#include <stdlib.h>
 #include "Cone.h"
+#include "GL\glut.h"
 
 Cone::Cone(double ba, double he, int st, int sl, Vector3d co, draw::mode m, Material *ma){
 	base = ba;

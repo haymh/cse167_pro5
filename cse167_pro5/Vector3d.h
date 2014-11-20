@@ -1,7 +1,6 @@
 #ifndef _VECTOR3_H_
 #define _VECTOR3_H_
-
-#include "GL\glew.h"
+#include "GL\glut.h"
 
 class Vector3d
 {
