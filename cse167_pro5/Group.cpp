@@ -12,8 +12,8 @@ void Group::addChild(Node * n){
 	children.push_back(n);
 }
 
-void Group::removeChild(Node *n){
-	children.remove(n);
+void Group::removeChild(Node * n){
+	children.remove(n);	
 }
 
 void Group::draw(Matrix4d & m){

@@ -18,6 +18,7 @@ public:
 	void setExponent(float exp);
 	void setCutOff(float cf);
 	void setAttenuation(float c, float l, float q);
+	float getCutOff();
 	void isSpotLight(bool b);
 	void apply();
 

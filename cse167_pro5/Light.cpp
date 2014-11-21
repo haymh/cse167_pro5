@@ -106,3 +106,7 @@ void Light::apply(){
 	}
 	glEnable(GL_LIGHT0 + id);
 }
+
+float Light::getCutOff(){
+	return cut_off;
+}

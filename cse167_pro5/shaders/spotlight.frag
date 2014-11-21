@@ -1,6 +1,6 @@
 varying vec4 diffuse,ambientGlobal, ambient, ecPos;
 varying vec3 normal,halfVector;
-varying float dist;
+
  
  
 void main()
@@ -15,10 +15,10 @@ void main()
     n = normalize(normal);
      
     // Compute the ligt direction
-    lightDir = vec3(gl_LightSource[0].position-ecPos);
+    vec3 lightDir = vec3(gl_LightSource[0].position-ecPos);
      
     /* compute the distance to the light source to a varying variable*/
-    dist = length(lightDir);
+    float dist = length(lightDir);
  
     /* compute the dot product between normal and ldir */
     NdotL = max(dot(n,normalize(lightDir)),0.0);

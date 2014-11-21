@@ -51,10 +51,10 @@
     <ClInclude Include="shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\diffuse_shading.frag">
+    <None Include="shaders\spotlight.frag">
       <Filter>shader</Filter>
     </None>
-    <None Include="shaders\diffuse_shading.vert">
+    <None Include="shaders\spotlight.vert">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

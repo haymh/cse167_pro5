@@ -122,5 +122,8 @@ Shader::setup(const char *vs, const char *fs)
 	glDeleteObjectARB(fid);
 	
 	glLinkProgramARB(pid);
+	GLint linked;
+	glGetProgramiv(pid, GL_LINK_STATUS, &linked);
+	
 }
 

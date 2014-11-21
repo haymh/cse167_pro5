@@ -27,9 +27,9 @@ int Window::old_x = width / 2;
 int Window::old_y = height / 2;
 
 MatrixTransform * Window::root = new MatrixTransform(Matrix4d());
-MatrixTransform * Window::bunny = new MatrixTransform(Matrix4d());
-MatrixTransform * Window::dragon = new MatrixTransform(Matrix4d());
-MatrixTransform * Window::bear = new MatrixTransform(Matrix4d());
+MatrixTransform * Window::bunny;
+MatrixTransform * Window::dragon;
+MatrixTransform * Window::bear;
 MatrixTransform * Window::spotL;
 MatrixTransform * Window::pointL;
 
@@ -46,6 +46,14 @@ vector<Vector3d> bunny_nor;
 vector<Coordinate3i> bunny_pos_ind;
 vector<Coordinate3i> bunny_nor_ind;
 
+// bear data
+Matrix4d bear_tran, bear_scale;
+Coordinate3d bear_min, bear_max;
+vector<Coordinate3d> bear_pos;
+vector<Vector3d> bear_nor;
+vector<Coordinate3i> bear_pos_ind;
+vector<Coordinate3i> bear_nor_ind;
+
 //trackball variables
 control::MOVEMENT movement = control::NONE;
 Vector3d lastPoint;
@@ -54,53 +62,75 @@ Matrix4d scaling;
 MatrixTransform* Window::scaling_mt;
 MatrixTransform* Window::rotate_mt;
 
-// light sources parameters
-f4 ambient(1.0, 1.0, 1.0, 1.0);
-f4 p_ambient(0.2, 0.2, 0.2, 1.0);
-f4 diffuse(1.0, 1.0, 1.0, 1.0);
-f4 p_diffuse(0.2, 0.2, 0.2, 1.0);
-f4 specular(1.0, 1.0, 1.0, 1.0);
+// spotlight sources parameters
+f4 ambient(0.1, 0.1, 0.1, 1.0);
+f4 diffuse(0.2, 0.2, 0.2, 1.0);
+f4 specular(0.8, 0.8, 0.8, 1.0);
 f4 position(3.0, 10.0, 0.0, 1.0);
-f4 position2(-3.0, 10.0, 0.0, 0.0);
 f3 spot_direction(-3.0, -10.0, 0.0);
-Light spotLight(ambient, diffuse, specular, position);
 
+// point light source parameters
+f4 p_ambient(0.2, 0.2, 0.2, 1.0);
+f4 p_diffuse(0.5, 0.5, 0.5, 1.0);
+f4 position2(-3.0, -10.0, 2.0, 0.0);
+
+Light spotLight(ambient, diffuse, specular, position);
 Light pointLight(p_ambient, p_diffuse, specular, position2);
 
-// material parameters
+//shine material parameters
 f4 m_ambient(0.5, 1.0, 0.5, 1.0);
 f4 m_diffuse(1.0, 1.0, 1.0, 1.0);
 f4 m_specular(1.0, 1.0, 1.0, 1.0);
 f4 m_emission(0.8, 0.8, 0.8, 0.0);
 float shininess = 50;
+
 Material material;
+Material b_material;
 Material emissive_ma;
 
+Shader * shader;
+bool useShader = false;
+bool lightControl = false;
+
+KEY key = F1;
 
 void Window::init(){
+	// load shader
+	shader = new Shader("shaders/spotlight.vert", "shaders/spotlight.frag");
+	//shader->printLog("shader log:");
+	//system("pause");
+
 	/// loading bunny
 	Parser::parseObj("bunny.obj", bunny_pos, bunny_nor, bunny_pos_ind, bunny_nor_ind, bunny_min, bunny_max);
 	bunny_tran.makeTranslate(-(bunny_min.x + bunny_max.x) / 2,
 		-(bunny_min.y + bunny_max.y) / 2, -(bunny_min.z + bunny_max.z) / 2);
 	bunny_scale = calculateScalingMatrix(width, height, bunny_min, bunny_max);
-	bunny_tran.print("bunny translate: ");
-	bunny_scale.print("bunny scaling: ");
 	
+	/// loading bear
+	Parser::parseObj("bear.obj", bear_pos, bear_nor, bear_pos_ind, bear_nor_ind, bear_min, bear_max);
+	bear_tran.makeTranslate(-(bear_min.x + bear_max.x) / 2,
+		-(bear_min.y + bear_max.y) / 2, -(bear_min.z + bear_max.z) / 2);
+	bear_scale = calculateScalingMatrix(width, height, bear_min, bear_max);
+
 
 	//setting up light sources
-	spotLight.setExponent(shininess);
-	spotLight.setCutOff(2);
+	spotLight.setExponent(1);
+	spotLight.setCutOff(5);
 	spotLight.setSpotDirection(spot_direction);
 	spotLight.setAttenuation(1.0, 0.1, 0.0);
 
-	//setting up material
+	//setting up material for bunny
 	material.setAmbient(m_ambient);
 	material.setDiffuse(m_diffuse);
 	material.setSpecular(m_specular);
 	material.setShininess(shininess);
 
-	//setting up emissive material
-	emissive_ma.setAmbient(ambient);
+	//setting up material for bear
+	b_material.setAmbient(f4(0.2, 0.6, 0.6, 1.0));
+	b_material.setDiffuse(f4(0.5, 0.5, 0.5, 1.0));
+
+	//setting up emissive material for point light
+	emissive_ma.setAmbient(f4(0.8, 0.8, 0.8, 1.0));
 	emissive_ma.setDiffuse(diffuse);
 	emissive_ma.setSpecular(specular);
 	emissive_ma.setEmission(f4(0.1,0.1,0.1,1.0));
@@ -110,17 +140,20 @@ void Window::init(){
 	//building scene graph
 	scaling_mt = new MatrixTransform(Matrix4d());
 	rotate_mt = new MatrixTransform(Matrix4d());
-	MatrixTransform * bunny = new MatrixTransform(bunny_scale * bunny_tran);
+	bunny = new MatrixTransform(bunny_scale * bunny_tran);
 	root->addChild(rotate_mt);
 	rotate_mt->addChild(scaling_mt);
 	scaling_mt->addChild(bunny);
 	bunny->addChild(new ObjNode(&bunny_pos, &bunny_nor, &bunny_pos_ind, &bunny_nor_ind, bunny_min, bunny_max, &material));
 
+	bear = new MatrixTransform(bear_scale * bear_tran);
+	bear->addChild(new ObjNode(&bear_pos, &bear_nor, &bear_pos_ind, &bear_nor_ind, bear_min, bear_max, &b_material));
+
 	Matrix4d t1;
-	t1.makeTranslate(-3.0, 10.0, 0.0);
+	t1.makeTranslate(-3.0, -10.0, 2.0);
 	pointL = new MatrixTransform(t1);
 	root->addChild(pointL);
-	pointL->addChild(new Sphere(1, 20, 20, Vector3d(1, 1, 1), draw::SOLID, &emissive_ma));
+	pointL->addChild(new Sphere(0.5, 20, 20, Vector3d(1, 1, 1), draw::SOLID, &emissive_ma));
 
 	Vector3d vCone(-3, -10, 0);
 	vCone.normalize();
@@ -132,7 +165,8 @@ void Window::init(){
 	t2.makeTranslate(3, 10, 0);
 	spotL = new MatrixTransform(t2 * rCone);
 	root->addChild(spotL);
-	spotL->addChild(new Cone(1, 2, 20, 20, Vector3d(0.0, 0.0, 0.0),draw::SOLID));
+	Material * m_cone = new Material(f4(0.5, 0.6, 0.9, 1.0), f4(0.5, 0.5, 0.5, 1.0), f4(0, 0, 0, 1.0), 20, f4(0, 0, 0, 1.0), f3(0, 0, 0));
+	spotL->addChild(new Cone(0.5, 1, 20, 20, Vector3d(0.0, 0.0, 0.0),draw::SOLID, m_cone));
 }
 
 Matrix4d Window::calculateScalingMatrix(int w, int h, Coordinate3d min, Coordinate3d max){
@@ -175,7 +209,8 @@ void Window::reshapeCallback(int w, int h)
 	glLoadIdentity();
 	gluPerspective(60.0, double(width) / (double)height, 1.0, 1000.0); // set perspective projection viewing frustum
 	gluLookAt(eye[0], eye[1], eye[2], lookat[0], lookat[1], lookat[2], up[0], up[1], up[2]);
-	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	spotLight.apply();
 	pointLight.apply();
 	// recalculate bunny_scale matrix
@@ -200,10 +235,38 @@ void Window::displayCallback()
 
 
 void Window::keyboardProcess(unsigned char key, int x, int y){
-
+	switch (key){
+	case 'p': 
+		useShader = !useShader;
+		if (useShader)
+			shader->bind();
+		else
+			shader->unbind();
+		break;
+	case 'l':
+		lightControl = !lightControl;
+		break;
+	case 27:
+		exit(0);
+	}
 }
 void Window::processSpecialKeys(int k, int x, int y){
-
+	switch (k){
+	case GLUT_KEY_F1:
+		if (key != F1){
+			scaling_mt->removeChild(bear);
+			scaling_mt->addChild(bunny);
+			key = F1;
+		}
+		break;
+	case GLUT_KEY_F2:
+		if (key != F2){
+			scaling_mt->removeChild(bunny);
+			scaling_mt->addChild(bear);
+			key = F2;
+		}
+		break;
+	}
 }
 void Window::mouseMotionProcess(int x, int y){
 	Vector3d direction;
@@ -214,17 +277,18 @@ void Window::mouseMotionProcess(int x, int y){
 	switch (movement){
 	case control::ROTATION:
 	{
-		//curPoint = trackBallMapping(x, y);
-		direction = curPoint - lastPoint;
-		double velocity = direction.magnitude();
-		if (velocity > 0.0001){
-			Vector3d rotAxis = lastPoint * curPoint;
-			rotAxis.normalize();
-			rot_angle = velocity * ROTSCALE;
-			Matrix4d r;
-			r.makeRotate(rot_angle, rotAxis);
-			rotation = r * rotation;
-			rotate_mt->setMatrix(rotation);
+		if (!lightControl){
+			direction = curPoint - lastPoint;
+			double velocity = direction.magnitude();
+			if (velocity > 0.0001){
+				Vector3d rotAxis = lastPoint * curPoint;
+				rotAxis.normalize();
+				rot_angle = velocity * ROTSCALE;
+				Matrix4d r;
+				r.makeRotate(rot_angle, rotAxis);
+				rotation = r * rotation;
+				rotate_mt->setMatrix(rotation);
+			}
 		}
 	}
 	break;
@@ -232,11 +296,17 @@ void Window::mouseMotionProcess(int x, int y){
 	{
 		pixel_diff = curPoint[1] - lastPoint[1];
 		zoom_factor = 1.0 + pixel_diff * ZOOMSCALE;
-		Matrix4d s;
-		s.makeScale(zoom_factor, zoom_factor, zoom_factor);
-		scaling = scaling * s;
-		scaling_mt->setMatrix(scaling);
-		displayCallback();
+		if (!lightControl){
+			Matrix4d s;
+			s.makeScale(zoom_factor, zoom_factor, zoom_factor);
+			scaling = scaling * s;
+			scaling_mt->setMatrix(scaling);
+			displayCallback();
+		}
+		else{
+			spotLight.setCutOff(spotLight.getCutOff() * zoom_factor);
+		}
+		
 	}
 		break;
 	}

@@ -24,7 +24,7 @@ void ObjNode::render(){
 	if (material != NULL)
 		material->apply();
 	else
-		glColor3d(1.0, 1.0, 1.0);
+		glColor3d(0.8, 0.8, 0.8);
 	glBegin(GL_TRIANGLES);
 
 
