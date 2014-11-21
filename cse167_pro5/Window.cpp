@@ -54,6 +54,14 @@ vector<Vector3d> bear_nor;
 vector<Coordinate3i> bear_pos_ind;
 vector<Coordinate3i> bear_nor_ind;
 
+// dragon data
+Matrix4d dragon_tran, dragon_scale;
+Coordinate3d dragon_min, dragon_max;
+vector<Coordinate3d> dragon_pos;
+vector<Vector3d> dragon_nor;
+vector<Coordinate3i> dragon_pos_ind;
+vector<Coordinate3i> dragon_nor_ind;
+
 //trackball variables
 control::MOVEMENT movement = control::NONE;
 Vector3d lastPoint;
@@ -112,6 +120,12 @@ void Window::init(){
 		-(bear_min.y + bear_max.y) / 2, -(bear_min.z + bear_max.z) / 2);
 	bear_scale = calculateScalingMatrix(width, height, bear_min, bear_max);
 
+	/// loading dragon
+	Parser::parseObj("dragon.obj", dragon_pos, dragon_nor, dragon_pos_ind, dragon_nor_ind, dragon_min, dragon_max);
+	dragon_tran.makeTranslate(-(dragon_min.x + dragon_max.x) / 2,
+		-(dragon_min.y + dragon_max.y) / 2, -(dragon_min.z + dragon_max.z) / 2);
+	dragon_scale = calculateScalingMatrix(width, height, dragon_min, dragon_max);
+
 
 	//setting up light sources
 	spotLight.setExponent(1);
@@ -148,6 +162,9 @@ void Window::init(){
 
 	bear = new MatrixTransform(bear_scale * bear_tran);
 	bear->addChild(new ObjNode(&bear_pos, &bear_nor, &bear_pos_ind, &bear_nor_ind, bear_min, bear_max, &b_material));
+
+	dragon = new MatrixTransform(dragon_scale * dragon_tran);
+	dragon->addChild(new ObjNode(&dragon_pos, &dragon_nor, &dragon_pos_ind, &dragon_nor_ind, dragon_min, dragon_max, &b_material));
 
 	Matrix4d t1;
 	t1.makeTranslate(-3.0, -10.0, 2.0);
@@ -254,16 +271,32 @@ void Window::processSpecialKeys(int k, int x, int y){
 	switch (k){
 	case GLUT_KEY_F1:
 		if (key != F1){
-			scaling_mt->removeChild(bear);
+			if (key == F2)
+				scaling_mt->removeChild(bear);
+			if (key == F3)
+				scaling_mt->removeChild(dragon);
 			scaling_mt->addChild(bunny);
 			key = F1;
 		}
 		break;
 	case GLUT_KEY_F2:
 		if (key != F2){
-			scaling_mt->removeChild(bunny);
+			if (key == F1)
+				scaling_mt->removeChild(bunny);
+			if (key == F3)
+				scaling_mt->removeChild(dragon);
 			scaling_mt->addChild(bear);
 			key = F2;
+		}
+		break;
+	case GLUT_KEY_F3:
+		if (key != F3){
+			if (key == F1)
+				scaling_mt->removeChild(bunny);
+			if (key == F2)
+				scaling_mt->removeChild(bear);
+			scaling_mt->addChild(dragon);
+			key = F3;
 		}
 		break;
 	}
