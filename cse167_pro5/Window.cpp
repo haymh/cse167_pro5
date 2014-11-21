@@ -73,24 +73,24 @@ MatrixTransform* Window::rotate_mt;
 // spotlight sources parameters
 f4 ambient(0.1, 0.1, 0.1, 1.0);
 f4 diffuse(0.2, 0.2, 0.2, 1.0);
-f4 specular(0.8, 0.8, 0.8, 1.0);
+f4 specular(1, 1, 1, 1.0);
 f4 position(3.0, 10.0, 0.0, 1.0);
 f3 spot_direction(-3.0, -10.0, 0.0);
 
 // point light source parameters
-f4 p_ambient(0.2, 0.2, 0.2, 1.0);
-f4 p_diffuse(0.5, 0.5, 0.5, 1.0);
+f4 p_ambient(0.4, 0.4, 0.4, 1.0);
+f4 p_diffuse(1, 1, 1, 1.0);
 f4 position2(-3.0, -10.0, 2.0, 0.0);
 
 Light spotLight(ambient, diffuse, specular, position);
 Light pointLight(p_ambient, p_diffuse, specular, position2);
 
 //shine material parameters
-f4 m_ambient(0.5, 1.0, 0.5, 1.0);
-f4 m_diffuse(1.0, 1.0, 1.0, 1.0);
-f4 m_specular(1.0, 1.0, 1.0, 1.0);
+f4 m_ambient(0.19225, 0.19225, 0.19225, 1.0);
+f4 m_diffuse(0.50754, 0.50754, 0.50754, 1.0);
+f4 m_specular(0.508273, 0.508273, 0.508273, 1.0);
 f4 m_emission(0.8, 0.8, 0.8, 0.0);
-float shininess = 50;
+float shininess = 51.2;
 
 Material material;
 Material b_material;
